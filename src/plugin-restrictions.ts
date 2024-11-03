@@ -8,5 +8,5 @@ export function memberHasAnyRole(
 }
 
 export function memberHasRole(member: GuildMember, roleId: string): boolean {
-  return !!member.roles.cache.get(roleId);
+  return !!member.roles.resolve(roleId);
 }

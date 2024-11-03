@@ -1,9 +1,9 @@
-import { Message } from 'discord.js';
+import { Message, OmitPartialGroupDMChannel } from 'discord.js';
 import { createUser, loadUser, saveUser, User } from '../db/user';
 import { Plugin } from '../plugins/plugin';
 
 export async function withUser(
-  message: Message,
+  message: OmitPartialGroupDMChannel<Message<boolean>>,
   fn: (user: User, updateUser: (newUser: User) => void) => Promise<void>
 ) {
   let userNeedsSaving = false;

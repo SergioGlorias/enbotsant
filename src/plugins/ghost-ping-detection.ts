@@ -8,9 +8,9 @@ export default function ({ logChannel }: { logChannel: string }): Plugin {
       const mentions = Array.from(message.mentions.users.values()).map(
         (x) => x.username
       );
-      const target = guild.channels.cache.get(logChannel);
+      const target = guild.channels.resolve(logChannel);
 
-      if (mentions.length && target?.isText()) {
+      if (mentions.length && target?.isTextBased()) {
         target.send(
           `Message from ${message.author.username} in ${
             channel.name

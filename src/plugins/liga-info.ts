@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { format, formatDuration, intervalToDuration, isPast } from 'date-fns';
-import { MessageEmbed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import { throttle } from 'lodash';
 
 import { Plugin } from './plugin';
@@ -70,7 +70,7 @@ export default function ({
         const next = await getNextLigaTournament();
         const last = await getLastLigaTournament();
 
-        const embed = new MessageEmbed() // Set the main content of the embed
+        const embed = new EmbedBuilder() // Set the main content of the embed
           .setTitle('Lichess Discord Bundesliga Team')
           .setColor(0x8ab7ff)
           .setDescription(
@@ -79,8 +79,7 @@ On Thursdays and Sundays members of the server play together in the Lichess Bund
 If you want to be notified on Discord before tournaments, use !joinliga.
 `
           )
-          .addField('Next tournament', getTournamentField(next), true)
-          .addField('Last tournament', getTournamentField(last), true);
+          .addFields({name: 'Next tournament', value: getTournamentField(next), inline: true}, {name:'Last tournament', value: getTournamentField(last), inline: true})
 
         message.channel.send({ embeds: [embed] });
       }

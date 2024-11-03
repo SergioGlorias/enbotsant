@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, EmbedBuilder, OmitPartialGroupDMChannel } from 'discord.js';
 import { loadResponse, saveResponse } from '../db/response';
 import { memberHasAnyRole } from '../plugin-restrictions';
 import { Plugin } from './plugin';
@@ -24,7 +24,7 @@ export default function ({ adminRoles }: { adminRoles: string[] }): Plugin {
       if (command) {
         const response = await loadResponse(command);
         if (response) {
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setTitle(response.title)
             .setColor(response.colour)
             .setDescription(response.body);
@@ -35,7 +35,7 @@ export default function ({ adminRoles }: { adminRoles: string[] }): Plugin {
   };
 }
 
-async function setResponse(message: Message): Promise<void> {
+async function setResponse(message: OmitPartialGroupDMChannel<Message<boolean>>): Promise<void> {
   const [commandLine, ...bodyLines] = message.content.split('\n');
   const [_, target, ...titleWords] = commandLine.split(' ');
 
@@ -49,7 +49,7 @@ async function setResponse(message: Message): Promise<void> {
   await message.reply(`!${target.toLowerCase()} saved`);
 }
 
-async function setResponseColour(message: Message): Promise<void> {
+async function setResponseColour(message: OmitPartialGroupDMChannel<Message<boolean>>): Promise<void> {
   const [_, target, colour] = message.content.split(' ', 3);
   const response = await loadResponse(target.toLowerCase());
 
@@ -64,7 +64,7 @@ async function setResponseColour(message: Message): Promise<void> {
   }
 }
 
-async function showResponse(message: Message): Promise<void> {
+async function showResponse(message: OmitPartialGroupDMChannel<Message<boolean>>): Promise<void> {
   const [_, target] = message.content.split(' ', 3);
   const response = await loadResponse(target.toLowerCase());
 

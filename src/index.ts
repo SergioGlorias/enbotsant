@@ -1,4 +1,4 @@
-import { Client, Intents } from 'discord.js';
+import { Client, GatewayIntentBits as Intents, Partials, Events } from 'discord.js';
 import { exit } from 'process';
 
 import log from './lib/log';
@@ -16,8 +16,8 @@ if (!DISCORD_BOT_TOKEN) {
 }
 
 const client = new Client({
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
-  partials: ['MESSAGE', 'CHANNEL'],
+  intents: [Intents.Guilds, Intents.GuildMessages, Intents.MessageContent],
+  partials: [Partials.Message, Partials.Channel],
 });
 
 let plugins = pluginsProduction;
@@ -26,13 +26,13 @@ try {
 } catch (e) {}
 log(`Loaded ${plugins.length} plugins`);
 
-client.on('ready', () => {
+client.on(Events.ClientReady, () => {
   log(`Logged in as ${client.user?.tag}!`);
 });
 
-client.on('messageCreate', async (message) => {
-  if (message.author.bot) {
-    // Skip bot messages
+client.on(Events.MessageCreate, async (message) => {
+  if (message.author.bot || message.channel.isDMBased()) {
+    // Skip bot & DM messages
     return;
   }
 
@@ -54,7 +54,7 @@ client.on('messageDelete', async (message) => {
     log(`Message ${message.id} was deleted but was a partial`);
     return;
   }
-  if (message.author.bot) {
+  if (message.author.bot || message.channel.isDMBased()) {
     // Skip bot messages
     return;
   }

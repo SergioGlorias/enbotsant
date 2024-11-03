@@ -1,4 +1,5 @@
 import { MessageData, MessageActions } from '../engine/message-util';
+import {OmitPartialGroupDMChannel, Message} from "discord.js"
 
 export type Plugin = {
   name: string;

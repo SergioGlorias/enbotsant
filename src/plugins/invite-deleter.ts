@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Message, OmitPartialGroupDMChannel } from 'discord.js';
 
 import { Plugin } from './plugin';
 
@@ -14,7 +14,7 @@ export default function (): Plugin {
   };
 }
 
-function isInvite(message: Message) {
+function isInvite(message: OmitPartialGroupDMChannel<Message<boolean>>) {
   return (
     message.content.includes('discordapp.com/invite') ||
     message.content.includes('discord.gg/')

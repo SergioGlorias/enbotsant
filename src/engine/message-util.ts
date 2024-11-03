@@ -3,13 +3,14 @@ import {
   GuildChannel,
   GuildMember,
   Message,
+  OmitPartialGroupDMChannel,
   ThreadChannel,
 } from 'discord.js';
 import { User } from '../db/user';
 import log from '../lib/log';
 
 export type MessageData = {
-  message: Message;
+  message: OmitPartialGroupDMChannel<Message<boolean>>;
   user: User;
   guild: Guild;
   channel: GuildChannel | ThreadChannel;
@@ -22,7 +23,7 @@ export type MessageActions = {
 };
 
 export function getMessageData(
-  message: Message,
+  message: OmitPartialGroupDMChannel<Message<boolean>>,
   user: User
 ): MessageData | null {
   const guild = message.guild;
@@ -56,7 +57,7 @@ export function getMessageData(
 const PREFIX = '!';
 const matcher = new RegExp(`^${PREFIX}([a-zA-Z-]+)( |$)`);
 
-function isCommand(message: Message): string | null {
+function isCommand(message: OmitPartialGroupDMChannel<Message<boolean>>): string | null {
   const match = message.content.match(matcher);
   if (match) {
     return match[1].toLowerCase();
